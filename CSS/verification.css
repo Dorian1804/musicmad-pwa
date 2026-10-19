@@ -1,0 +1,13 @@
+.verification-page{max-width:760px;display:grid;gap:20px;padding-bottom:28px}
+.verification-heading h1{font-size:clamp(1.8rem,5vw,2.7rem);margin:8px 0}
+.verification-heading p,.verification-criteria p{color:var(--muted);line-height:1.6}
+.verification-criteria{border-top:4px solid var(--accent);padding:22px}
+.verification-criteria ol{padding-left:24px;display:grid;gap:14px;line-height:1.5}
+.verification-page .account-confirm-form{display:grid;gap:12px}
+.verification-page input:not([type=checkbox]),.verification-page select,.verification-page button{min-height:48px;font-size:1rem;max-width:100%;min-width:0}
+.verification-check{display:flex;align-items:center;gap:12px;min-height:48px;line-height:1.5}
+.verification-check input{width:22px;height:22px;flex-shrink:0}
+.verification-results{padding:0;list-style:none;display:grid;gap:14px}
+.verification-results li{display:grid;gap:5px;overflow-wrap:anywhere}
+.verification-results a{min-height:44px;display:flex;align-items:center;font-weight:750}
+.verification-results small{color:var(--muted)}

@@ -1,0 +1,13 @@
+.public-share { margin-block: 18px; min-width: 0; }
+.public-share input { width: 100%; min-width: 0; font-size: 16px; min-height: 48px; }
+.public-share p, .public-share-unavailable { line-height: 1.6; overflow-wrap: anywhere; }
+.public-share-unavailable { color: var(--muted); font-size: .82rem; }
+.account-qr { min-width: 0; }
+.account-qr canvas { display: block; width: min(100%, 280px); height: auto; margin: 16px auto; image-rendering: pixelated; }
+.qr-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-block: 14px; }
+.qr-actions .btn { min-height: 48px; flex: 1 1 130px; white-space: normal; }
+.qr-status { min-height: 24px; line-height: 1.5; }
+.public-preview { max-width: 720px; padding: 20px 16px; }
+.public-preview-card { padding: clamp(20px,6vw,36px); min-width: 0; }
+.public-preview h1 { font-size: clamp(1.8rem,7vw,3rem); overflow-wrap: anywhere; }
+.public-preview p { line-height: 1.65; overflow-wrap: anywhere; }

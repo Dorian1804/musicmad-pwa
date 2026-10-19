@@ -1,0 +1,98 @@
+{
+
+  "id": "musicmad",
+
+  "name": "MusicMad – Comunidad de músicos",
+
+  "short_name": "MusicMad",
+
+  "description": "Comparte tu música, encuentra músicos y arma bandas.",
+
+  "start_url": "./feed.php?utm_source=pwa",
+
+  "scope": "./",
+
+  "display": "standalone",
+
+  "display_override": ["standalone", "minimal-ui"],
+
+  "share_target": {
+
+    "action": "./compartir.php",
+
+    "method": "GET",
+
+    "enctype": "application/x-www-form-urlencoded",
+
+    "params": { "title": "title", "text": "text", "url": "url" }
+
+  },
+
+  "orientation": "any",
+
+  "background_color": "#f0eee8",
+
+  "theme_color": "#190d22",
+
+  "lang": "es",
+
+  "dir": "ltr",
+
+  "categories": ["music", "social"],
+
+  "icons": [
+
+    { "src": "img/icon-192.png",          "sizes": "192x192", "type": "image/png", "purpose": "any" },
+
+    { "src": "img/icon-512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
+
+    { "src": "img/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+
+  ],
+
+  "shortcuts": [
+
+    {
+
+      "name": "Comunidad",
+
+      "short_name": "Comunidad",
+
+      "description": "Feed de músicos",
+
+      "url": "./feed.php",
+
+      "icons": [{ "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+
+    },
+
+    {
+
+      "name": "Se busca músico",
+
+      "short_name": "Se busca",
+
+      "description": "Encuentra músicos para tu proyecto",
+
+      "url": "./busco.php",
+
+      "icons": [{ "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+
+    },
+
+    {
+
+      "name": "Mi perfil",
+
+      "short_name": "Perfil",
+
+      "url": "./perfil.php",
+
+      "icons": [{ "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+
+    }
+
+  ]
+
+}
+

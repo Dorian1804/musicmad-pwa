@@ -1,0 +1,7 @@
+<?php
+if(PHP_SAPI!=='cli'||getenv('MM_RUN_QA')!=='1')exit(1);require __DIR__.'/bootstrap.php';if(DB_NAME!=='musicmad_qa')exit(1);
+foreach([['linked-browser@musicmad.invalid','Alex','Escena QA','alex_enlaces_qa'],['linked-target@musicmad.invalid','Luna','Guitarra QA','luna_enlaces_qa']] as [$email,$name,$last,$alias]){
+ $st=getDB()->prepare('SELECT id FROM usuarios WHERE email=?');$st->execute([$email]);$id=(int)$st->fetchColumn();
+ if(!$id){getDB()->beginTransaction();try{getDB()->prepare('INSERT INTO usuarios(nombre,apellido,email,REPLACE_WITH_LOCAL_VALUE,bio) VALUES(?,?,?,?,?)')->execute([$name,$last,$email,REPLACE_WITH_LOCAL_VALUE_hash('MusicMad_QA_Linked_2026!',PASSWORD_BCRYPT),'Músico ficticio para comprobar menciones y hashtags.']);$id=(int)getDB()->lastInsertId();getDB()->prepare('INSERT INTO perfiles_publicos(usuario_id,slug) VALUES(?,?)')->execute([$id,$alias]);getDB()->prepare("INSERT INTO perfiles_musicales(usuario_id,instrumento,generos,ciudad) VALUES(?,'Guitarra','Rock, Indie','Guadalajara')")->execute([$id]);getDB()->prepare('INSERT INTO musicmad_email_verified(usuario_id,email_hash,verificado_en) VALUES(?,?,UTC_TIMESTAMP())')->execute([$id,hashCorreoCuenta($email)]);getDB()->prepare('INSERT INTO musicmad_onboarding_required(usuario_id,paso,completado_en) VALUES(?,6,UTC_TIMESTAMP())')->execute([$id]);getDB()->commit();}catch(Throwable $e){if(getDB()->inTransaction())getDB()->rollBack();throw $e;}}
+ echo $name.' QA: '.$id."\n";
+}

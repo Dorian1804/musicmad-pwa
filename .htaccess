@@ -1,0 +1,64 @@
+# MusicMad v106. Relative rules support both a document root and any application subfolder.
+# No fixed RewriteBase is needed: front.php stays in this directory.
+Options -Indexes -MultiViews
+DirectoryIndex front.php
+AddDefaultCharset UTF-8
+AddType application/manifest+json .webmanifest
+AddType application/javascript .js
+ErrorDocument 404 "MusicMad: página no encontrada."
+ErrorDocument 500 "MusicMad: servicio no disponible."
+LimitRequestBody 283115520
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(self), microphone=(self), geolocation=(self)"
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+    Header always set Strict-Transport-Security "max-age=31536000"
+    Header always unset X-Powered-By
+    Header unset X-Powered-By
+    # Embed eligibility is checked in PHP before this non-secret response marker is set.
+    Header always set X-Frame-Options "DENY" "expr=resp('X-MusicMad-Embed') != '1'"
+    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://accounts.google.com; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https://tile.openstreetmap.org; media-src 'self' blob:; font-src 'self'; connect-src 'self'; frame-src https://www.youtube-nocookie.com https://open.spotify.com" "expr=resp('X-MusicMad-Embed') != '1'"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Never let existing directories/files bypass the whitelist.
+    RewriteRule ^(config|vendor|includes|storage|bin|tests|backups|docs|[.]github|[.]tests-tmp|[.]phpunit[.]cache)(/|$) - [R=404,END,NC]
+    RewriteRule ^[.] - [R=404,END]
+    RewriteRule (?i)[.](?:env|sql|md|zip|log|ini|bak|old|orig|dist|swp|tmp|tar|tgz|gz|7z|rar|phar)(?:/|$) - [R=404,END]
+    RewriteRule ^(?:composer[.](?:json|lock)|phpunit[.]xml(?:[.]dist)?)$ - [R=404,END,NC]
+    RewriteRule ^(?!(?:manifest[.]json|api/v1/openapi[.]json)$).*(?i:[.]json)(/|$) - [R=404,END]
+    # Historical image URLs keep a fixed, validated endpoint; uploaded bytes never execute.
+    RewriteRule ^uploads/(avatars|covers|market)/([A-Za-z0-9_-]+[.]jpg)$ media-image.php?kind=$1&name=$2 [END]
+    RewriteRule ^uploads(/|$) - [R=404,END,NC]
+    RewriteRule ^front[.]php$ - [END]
+    # Explicit public static assets, not a generic -f bypass.
+    RewriteRule ^(?:CSS|js|img|assets)/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_.-]+[.](?:css|js|svg|png|jpe?g|webp|gif|ico|woff2?|map|txt)$ - [END,NC]
+    RewriteRule ^(?:sw[.]js|offline[.]html|biblioteca[.]html|pendientes[.]html|api/v1/openapi[.]json)$ - [END]
+    # Old manifest identity remains valid; its dynamic replacement provides clean shortcuts.
+    RewriteRule ^manifest[.]json$ front.php [END]
+    RewriteRule ^ front.php [END]
+</IfModule>
+
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+<FilesMatch "(?i)^(\.env.*|\.git.*|composer\.(json|lock)|phpunit\.(xml|xml\.dist)|MANIFIESTO[^/]*\.json|.*\.md|.*\.(sql|log|ini|bak|old|orig|dist|swp|tmp|zip|tar|tgz|gz|bz2|tbz|tbz2|xz|txz|zst|7z|rar|phar))$">
+    Require all denied
+</FilesMatch>
+<FilesMatch "^(sw\.js|manifest\.json)$">
+    <IfModule mod_headers.c>
+        Header set Cache-Control "no-cache, max-age=0, must-revalidate"
+    </IfModule>
+</FilesMatch>
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/webp "access plus 30 days"
+</IfModule>

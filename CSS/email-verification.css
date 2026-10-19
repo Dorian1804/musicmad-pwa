@@ -1,0 +1,9 @@
+.email-check { padding-inline: 16px; }
+.email-check .auth-card { max-width: 560px; min-width: 0; }
+.email-check .auth-body { padding: clamp(20px, 6vw, 36px); }
+.email-check h1 { font-size: clamp(1.7rem, 7vw, 2.4rem); line-height: 1.12; }
+.email-check p { line-height: 1.6; }
+.email-check-kicker { font-size: .72rem; font-weight: 800; letter-spacing: .12em; }
+.email-check-address { overflow-wrap: anywhere; }
+.email-check-links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
+.email-check button, .email-check a { min-height: 44px; }

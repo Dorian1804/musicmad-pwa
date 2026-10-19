@@ -1,0 +1,26 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MusicMad API",
+    "version": "1.0.0",
+    "description": "API JSON de MusicMad para clientes web y aplicaciones móviles. Los tokens duran una hora y se revocan con /logout."
+  },
+  "servers": [{ "url": "/api/v1" }],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+    },
+    "schemas": {
+      "Error": { "type": "object", "properties": { "error": { "type": "string" }, "message": { "type": "string" } }, "required": ["error"] },
+      "LoginRequest": { "type": "object", "properties": { "email": { "type": "string", "format": "email" }, "REPLACE_WITH_LOCAL_VALUE": { "type": "string" } }, "required": ["email", "REPLACE_WITH_LOCAL_VALUE"] },
+      "PostRequest": { "type": "object", "properties": { "title": { "type": "string", "maxLength": 120 }, "text": { "type": "string", "maxLength": 1000 }, "genre": { "type": "string", "maxLength": 40 } }, "required": ["title"] }
+    }
+  },
+  "paths": {
+    "/login": { "post": { "summary": "Iniciar sesión y emitir un JWT", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginRequest" } } } }, "responses": { "200": { "description": "Token emitido" }, "401": { "description": "Credenciales inválidas" }, "429": { "description": "Límite de intentos" } } } },
+    "/me": { "get": { "summary": "Consultar la cuenta autenticada", "security": [{ "BearerAuth": [] }], "responses": { "200": { "description": "Cuenta actual" }, "401": { "description": "Token inválido o vencido" } } } },
+    "/feed": { "get": { "summary": "Consultar publicaciones con cursor", "security": [{ "BearerAuth": [] }], "parameters": [{ "name": "cursor", "in": "query", "schema": { "type": "integer" } }, { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 40 } }, { "name": "mode", "in": "query", "schema": { "type": "string", "enum": ["all", "following"] } }], "responses": { "200": { "description": "Feed y cursor siguiente" } } } },
+    "/posts": { "post": { "summary": "Crear una publicación de texto con correo confirmado", "security": [{ "BearerAuth": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostRequest" } } } }, "responses": { "201": { "description": "Publicación creada" }, "403": { "description": "email_verification_required: confirma el correo desde verification_url. El JWT no omite esta condición." }, "422": { "description": "Datos inválidos" } } } },
+    "/logout": { "post": { "summary": "Revocar el token usado", "security": [{ "BearerAuth": [] }], "responses": { "200": { "description": "Token revocado" } } } }
+  }
+}

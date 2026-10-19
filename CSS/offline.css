@@ -1,0 +1,23 @@
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin:0; min-height:100svh; min-height:100dvh; display:grid; place-items:center; padding:24px; font-family:var(--font-body,system-ui,sans-serif); color:#f5eff8; text-align:center; background:var(--stage); }
+.card { max-width:420px; }
+.logo { width:96px; height:96px; border-radius:22px; margin-bottom:16px; }
+h1 { margin:0 0 8px; color:var(--accent); font-size:1.6rem; }
+p { margin:0 0 20px; line-height:1.6; color:#d9cfdd; }
+a,button { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 22px; border-radius:8px; border:0; cursor:pointer; background:var(--accent); color:var(--stage); font:700 1rem system-ui; text-decoration:none; margin:4px; }
+a.sec { background:transparent; color:var(--accent); border:2px solid var(--accent); }
+:focus-visible { outline:3px solid #16a999; outline-offset:4px; }
+
+
+.offline-library { display:block; padding:24px 12px calc(24px + env(safe-area-inset-bottom,0px)); }
+.offline-library .card { margin:auto; max-width:640px; }
+.offline-library h1 { font-size:clamp(24px,5vw,36px); }
+.offline-tracks { padding:0; list-style:none; display:grid; gap:10px; }
+.offline-tracks li { display:grid; grid-template-columns:minmax(0,1fr) 48px; gap:8px; }
+.offline-track-play { background:#33233f; color:#f5eff8; text-align:left; display:grid; gap:5px; width:100%; margin:0; padding:14px; }
+.offline-track-play strong { overflow-wrap:anywhere; }
+.offline-track-play small { color:#c7b8d3; font-size:13px; }
+.offline-track-remove { margin:0; padding:0; background:#33233f; color:#e6dce9; }
+.offline-library audio { width:100%; margin:12px 0; }
+.offline-note { margin-top:24px; font-size:13px; }

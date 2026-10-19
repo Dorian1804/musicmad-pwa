@@ -1,0 +1,111 @@
+/* Stage art direction. Layout rules remain mobile first. */
+h1,h2,h3,h4,.brand,.post-titulo,.track-card-copy strong { font-family:var(--font-display); }
+:where(a,button,input,select,textarea,summary):focus-visible { outline-color:var(--focus); }
+.navbar { background:var(--stage); border-color:var(--stage-line); }
+.brand-wordmark small { color:var(--stage-muted); }
+.brand svg path { stroke:var(--accent-ink); }
+.mobile-header-actions a,.nav-toggle { border-color:var(--stage-line); }
+.nav-links { background:var(--stage); }
+.nav-links a:hover,.nav-account>summary:hover { background:var(--stage-raised); }
+.btn-accent,.composer-plus,.player-toggle { color:var(--accent-ink); }
+.btn-primary { color:#fff; }
+:root[data-theme=dark] .btn-primary { color:var(--stage); }
+.card,.post,.profile-card { border-radius:var(--radius); }
+.community-hero { background:radial-gradient(ellipse at 110% 10%,#624489 0,transparent 65%),var(--stage); color:var(--stage-text); padding:24px 20px; border-radius:var(--radius); isolation:isolate; }
+.community-hero::after { content:''; position:absolute; z-index:-1; inset:0; opacity:.12; background:repeating-linear-gradient(90deg,transparent 0 10px,#d7fa59 10px 12px,transparent 12px 19px); clip-path:polygon(0 55%,10% 70%,20% 40%,30% 62%,40% 30%,50% 58%,60% 38%,70% 65%,80% 24%,90% 52%,100% 42%,100% 70%,90% 66%,80% 42%,70% 78%,60% 57%,50% 76%,40% 48%,30% 80%,20% 60%,10% 85%,0 72%); }
+.community-hero p { color:var(--stage-muted); }
+.community-hero .community-kicker { color:var(--accent); }
+.community-hero h1 { font-size:clamp(27px,6vw,44px); line-height:1.12; letter-spacing:-.045em; }
+.scene-vinyl { fill:#17131e; stroke:var(--stage-line); width:76px; height:76px; animation:vinyl-turn 12s linear infinite; animation-play-state:paused; }
+.scene-vinyl circle:nth-child(4) { fill:var(--music-orange); stroke:var(--music-orange); }
+.scene-vinyl circle:nth-child(5) { fill:var(--stage); stroke:var(--stage); }
+.scene-vinyl path { stroke:var(--accent); }
+.music-is-playing .scene-vinyl { animation-play-state:running; }
+.scene-shortcuts a { border-radius:6px; border-bottom:3px solid var(--border); }
+.scene-shortcuts a:nth-child(even) { border-bottom-color:var(--music-orange); }
+.composer-disclosure { background:var(--card); border-left-color:var(--music-orange); }
+.composer-summary { min-height:72px; }
+.post { padding:18px; box-shadow:var(--shadow); }
+.post-titulo { font-size:21px; letter-spacing:-.025em; }
+.post-track { background:var(--surface-soft); border-left:0; padding:14px; position:relative; overflow:hidden; border-radius:8px; }
+.track-play { border:0; border-radius:6px; width:58px; height:58px; color:var(--accent-ink); background:radial-gradient(circle at center,var(--accent) 0 24%,transparent 25%),repeating-radial-gradient(circle at center,#3e354b 0 1px,var(--stage) 2px 5px); box-shadow:inset 0 0 0 1px #fff2; }
+.track-play svg { background:var(--accent); border-radius:50%; width:25px; height:25px; padding:5px; }
+.track-card-copy strong { font-size:15px; }
+.global-player { background:var(--stage); border-color:var(--stage-line); color:var(--stage-text); border-radius:10px; }
+.player-track-info small,.player-time { color:var(--stage-muted); }
+.player-step,.player-close,.player-offline { background:var(--stage-raised); border-color:var(--stage-line); color:var(--stage-text); }
+.player-queue-toggle { border-color:var(--stage-line); color:var(--stage-text); }
+.mobile-dock { background:var(--stage); border-top:1px solid var(--stage-line); }
+.mobile-dock a { color:var(--stage-muted); }
+.mobile-dock a.active { color:var(--accent); background:var(--stage-raised); }
+.profile-card-header { border-bottom:1px solid var(--border); }
+.profile-card-body { padding:18px; }
+.profile-card-identity { gap:10px; }
+.profile-card-body h3 { line-height:1.25; margin:0; }
+.profile-card-avatar { border-color:var(--card); }
+.profile-card-role { background:var(--surface-soft); }
+.filtros input,.filtros select,.market-filters input,.market-filters select { min-height:46px; max-height:52px; }
+@keyframes vinyl-turn { to { transform:rotate(360deg); } }
+@media(max-width:480px) {
+ .container { padding-inline:12px; }
+ .social-main { gap:16px; }
+ .community-hero { padding:22px 16px; gap:12px; }
+ .scene-vinyl { width:62px; height:62px; }
+ .post { padding:15px; }
+ .post-head { gap:8px; }
+ .post-track { grid-template-columns:52px minmax(0,1fr) auto; gap:10px; padding:12px; }
+ .track-play { width:52px; height:52px; }
+ .profile-card-body { padding:18px 16px; }
+ .profile-card-identity { clear:both; }
+}
+@media(min-width:981px) {
+ .container { padding-top:28px; }
+ .app-sidebar { background:var(--card); }
+ .app-sidebar a.active { border-left-color:var(--primary); background:var(--surface-soft); color:var(--accent-text); }
+ .community-hero { padding:32px; min-height:180px; }
+ .scene-vinyl { width:112px; height:112px; }
+}
+@media(prefers-reduced-motion:reduce) {
+ *,*::before,*::after { scroll-behavior:auto!important; animation:none!important; transition:none!important; }
+}
+
+.track-feedback-label { background:var(--surface-soft); color:var(--text); border-color:var(--border); }
+
+/* A small stage meter, driven by playback state and never used as fake audio data. */
+.brand-wordmark small::after { content:''; display:inline-block; width:17px; height:9px; margin-left:8px; vertical-align:baseline; background:repeating-linear-gradient(90deg,var(--accent) 0 2px,transparent 2px 4px); clip-path:polygon(0 75%,15% 75%,15% 30%,35% 30%,35% 60%,55% 60%,55% 0,75% 0,75% 40%,100% 40%,100% 100%,0 100%); }
+.music-is-playing .brand-wordmark small::after { animation:stage-meter .7s ease-in-out infinite alternate; transform-origin:bottom; }
+@keyframes stage-meter { to { transform:scaleY(.35); } }
+@media(prefers-reduced-motion:reduce) { .music-is-playing .brand-wordmark small::after { animation:none; } }
+
+/* Theme changes keep foreground and background synchronized. */
+.btn,.accion,.reaction-button { transition:transform .16s; }
+
+/* Phone scene: readable bilingual labels, stable badges and fewer stacked panels. */
+.dock-badge { position:absolute; inset:-5px -8px auto auto; border:2px solid var(--stage); border-radius:999px; display:grid; place-items:center; line-height:1; }
+.scene-shortcuts a { min-width:0; overflow-wrap:anywhere; }
+.scene-shortcuts a span { flex-shrink:0; }
+.post-avatar,.mobile-header-actions img,.nav-section-icon img { object-fit:cover; flex-shrink:0; }
+.community-hero .refresh-toolbar { position:absolute; z-index:2; top:8px; right:8px; margin:0; }
+.community-hero .page-refresh { width:44px; height:44px; padding:10px; font-size:0; border:0; border-radius:50%; color:var(--accent); background:var(--stage-raised); }
+.community-hero .page-refresh svg { width:20px; height:20px; }
+.community-hero .scene-vinyl { position:absolute; bottom:16px; right:20px; }
+.community-hero-copy { padding-right:82px; }
+@media(max-width:620px) {
+ .social-main { gap:12px; }
+ .community-hero { padding:18px 16px; min-height:124px; }
+ .community-hero h1 { font-size:30px; margin:6px 0; }
+ .community-hero .scene-vinyl { width:48px; height:48px; flex-shrink:0; right:16px; bottom:12px; }
+ .scene-shortcuts { grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
+ .scene-shortcuts a { min-height:44px; padding:8px 12px; font-size:13px; border-bottom-width:1px; }
+ .composer-summary { gap:10px; padding:12px; min-height:72px; }
+ .composer-summary>span:not(.composer-plus) { min-width:0; }
+ .composer-summary small { font-size:12px; line-height:1.5; }
+ .mobile-dock { gap:2px; padding-inline:4px; }
+ .mobile-dock a { gap:5px; }
+ .mobile-dock a small { font-size:10px; line-height:1.2; white-space:nowrap; }
+ .mobile-dock .nav-section-icon { flex-basis:auto; width:26px; }
+ .post { padding:14px; }
+ .post-titulo { font-size:22px; }
+ .post-track { padding:12px; gap:12px; }
+ .track-card-copy { min-width:0; overflow-wrap:anywhere; }
+}

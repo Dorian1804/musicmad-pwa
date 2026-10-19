@@ -1,0 +1,13 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const source=fs.readFileSync('js/scene-map.js','utf8');
+function setup(library=true){
+ const handlers={},buttons={},tiles={},status={textContent:''},message={textContent:''},error={hidden:true,querySelector:()=>message},consent={hidden:false},results={replaceChildren(){},append(){}},state={requests:0,redraw:0,removed:false,resized:0};
+ for(const name of ['open','retry'])buttons[name]={addEventListener(type,fn){this[type]=fn}};
+ const root={dataset:{tiles:'1'},hasAttribute:()=>false,querySelector(selector){return {'[data-map-open]':buttons.open,'[data-map-retry]':buttons.retry,'[data-map-status]':status,'[data-map-error]':error,'[data-map-consent]':consent,'[data-map-canvas]':{},'[data-map-results]':results,'[name=tipo]':{value:'todos'},'[name=ciudad]':{value:''}}[selector]||null;}};
+ const map={setView(){return this},on(){return this},invalidateSize(){state.resized++},remove(){state.removed=true},getBounds(){return {getWest:()=>-105,getEast:()=>-101,getSouth:()=>19,getNorth:()=>22}}};
+ const layer={on(name,fn){tiles[name]=fn;return this},addTo(){return this},redraw(){state.redraw++}};
+ const L={map:()=>map,tileLayer:()=>layer,layerGroup:()=>({addTo(){return this},clearLayers(){}})};
+ const context={window:{L:library?L:undefined},L,document:{readyState:'complete',hidden:false,querySelector:()=>root,addEventListener(name,fn){handlers[name]=fn}},Set,URLSearchParams,AbortController,Number,Math,setTimeout:()=>1,clearTimeout(){},requestAnimationFrame(fn){fn()},fetch:async()=>{state.requests++;return {ok:true,json:async()=>({ok:true,puntos:[]})}}};vm.runInNewContext(source,context);return {buttons,handlers,tiles,state,error,message,consent};
+}
+test('no carga imágenes ni datos antes de la elección y explica biblioteca ausente',()=>{const q=setup(false);assert.equal(q.state.requests,0);q.buttons.open.click();assert.equal(q.error.hidden,false);assert.match(q.message.textContent,/iniciar el mapa/);assert.equal(q.consent.hidden,false);assert.equal(q.state.requests,0)});
+test('error de fondo visible, reintento y limpieza al navegar',async()=>{const q=setup();q.buttons.open.click();for(let i=0;i<5;i++)await Promise.resolve();assert.equal(q.consent.hidden,true);assert.equal(q.state.requests,1);assert.equal(q.state.resized,1);const tile={};q.tiles.tileerror({tile});assert.equal(q.error.hidden,false);assert.match(q.message.textContent,/fondo del mapa/);q.buttons.retry.click();assert.equal(q.state.redraw,1);assert.equal(q.error.hidden,true);q.handlers['musicmad:beforepage']();assert.equal(q.state.removed,true)});

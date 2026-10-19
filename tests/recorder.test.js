@@ -1,0 +1,31 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+function math(){const context={window:{},Float32Array,ArrayBuffer,DataView};vm.runInNewContext(fs.readFileSync('js/recorder-math.js','utf8'),context);return context.window.MusicMadRecorderMath;}
+test('WAV mono con cabecera real, promedio estéreo, límites y amplitud',()=>{const b=math().wav([new Float32Array([-2,0,.5,2]),new Float32Array([-2,0,.5,2])]);const v=new DataView(b);assert.equal(Buffer.from(b).subarray(0,4).toString(),'RIFF');assert.equal(Buffer.from(b).subarray(8,12).toString(),'WAVE');assert.equal(v.getUint32(24,true),16000);assert.equal(v.getUint16(22,true),1);assert.equal(v.getUint32(40,true),8);assert.equal(v.getInt16(44,true),-32768);assert.equal(v.getInt16(48,true),16384);assert.equal(v.getInt16(50,true),32767);});
+test('rechaza toma vacía, demasiado larga, muestra no finita o canales distintos',()=>{const m=math();for(const channels of [[],[new Float32Array(0)],[new Float32Array(1440001)],[new Float32Array([NaN])],[new Float32Array(2),new Float32Array(1)]])assert.throws(()=>m.wav(channels));assert.throws(()=>m.wav([new Float32Array(1)],96000));assert.equal(m.wav([new Float32Array(1440000)]).byteLength,2880044);});
+function harness(getUserMedia){
+ const listeners=new Map(),timeouts=new Map();let timerId=0,recorderCount=0,base=null;
+ const preview={hidden:true,pause(){this.paused=true;}},input={disabled:false,files:[],dispatchEvent(){}},nodes={
+  '[data-record-status]':{},'[data-record-start]':{disabled:false},'[data-record-stop]':{hidden:true},'[data-record-submit]':{disabled:false},'[data-record-clock]':{},'[data-record-preview]':preview,'[data-record-download]':{hidden:true},'[data-record-base]':{checked:false},'input[name=audio]':input
+ };
+ const form={querySelector:s=>nodes[s],contains:()=>true,getAttribute:()=>null};
+ const document={hidden:false,querySelector:s=>s==='[data-studio-recorder]'?form:s==='[data-mix-base]'?base:null,querySelectorAll:()=>[],addEventListener:(name,fn)=>{if(!listeners.has(name))listeners.set(name,[]);listeners.get(name).push(fn);}};
+ class Recorder extends EventTarget{static isTypeSupported(){return true;}constructor(){super();this.mimeType='audio/webm';this.state='inactive';recorderCount++;}start(){this.state='recording';}stop(){this.state='inactive';const event=new Event('dataavailable');event.data=new Blob(['fake recorded bytes']);this.dispatchEvent(event);this.dispatchEvent(new Event('stop'));}}
+ const urls={made:0,revoked:0,createObjectURL(){this.made++;return 'blob:qa';},revokeObjectURL(){this.revoked++;}};
+ const window={isSecureContext:true,MediaRecorder:Recorder,OfflineAudioContext:class{},addEventListener:(name,fn)=>document.addEventListener(name,fn)};
+ const context={window,document,navigator:{mediaDevices:{getUserMedia}},MediaRecorder:Recorder,OfflineAudioContext:class{async decodeAudioData(){return {length:96000,numberOfChannels:1,sampleRate:48000,getChannelData:()=>new Float32Array(96000)};}},Float32Array,ArrayBuffer,DataView,Blob,File:require('node:buffer').File,Event,URL:urls,performance:{now:()=>0},DataTransfer:class{constructor(){this.files=[];this.items={add:f=>this.files.push(f)};}},setTimeout:fn=>{const id=++timerId;timeouts.set(id,fn);return id;},clearTimeout:id=>timeouts.delete(id),setInterval:()=>++timerId,clearInterval(){}};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('js/recorder-math.js','utf8'),context);vm.runInContext(fs.readFileSync('js/studio-recorder.js','utf8'),context);
+ return {nodes,input,urls,timeouts,setBase(value){base=value;},recorders:()=>recorderCount,event(name){for(const fn of listeners.get(name)||[])fn({});},click(name){const button={hasAttribute:s=>s===name};for(const fn of listeners.get('click')||[])fn({target:{closest:()=>button}});}};
+}
+const tick=()=>new Promise(resolve=>setImmediate(resolve));
+test('micrófono requiere clic y una toma termina en WAV con liberación y limpieza al navegar',async()=>{
+ let requested=0,stopped=0;const h=harness(async()=>{requested++;return {getTracks:()=>[{stop(){stopped++;}}]};});assert.equal(requested,0);h.click('data-record-start');await tick();assert.equal(requested,1);assert.equal(h.recorders(),1);assert.equal(h.nodes['[data-record-submit]'].disabled,true);h.click('data-record-stop');await tick();await tick();assert.equal(stopped,1);assert.equal(h.input.files[0].type,'audio/wav');assert.equal(h.input.files[0].size,192044);assert.equal(h.nodes['[data-record-submit]'].disabled,false);assert.equal(h.nodes['[data-record-preview]'].hidden,false);h.event('musicmad:beforepage');assert.equal(h.urls.revoked,1);assert.equal(h.nodes['[data-record-preview]'].paused,true);
+});
+test('permiso tardío tras navegación no inicia captura y error viejo no apaga una toma nueva',async()=>{
+ let resolve,stopped=0;const h=harness(()=>new Promise(r=>{resolve=r;}));h.click('data-record-start');h.event('musicmad:beforepage');resolve({getTracks:()=>[{stop(){stopped++;}}]});await tick();assert.equal(stopped,1);assert.equal(h.recorders(),0);
+ let oldReject,calls=0,newStopped=0;const other=harness(()=>{calls++;return calls===1?new Promise((r,j)=>{oldReject=j;}):Promise.resolve({getTracks:()=>[{stop(){newStopped++;}}]});});other.click('data-record-start');other.click('data-record-stop');other.click('data-record-start');await tick();assert.equal(other.recorders(),1);oldReject(new Error('old permission error'));await tick();assert.equal(newStopped,0);assert.equal(other.nodes['[data-record-submit]'].disabled,true);other.click('data-record-stop');await tick();assert.equal(newStopped,1);
+});
+
+
+test('escuchar base es optativo y su final detiene la captura y libera el micrófono',async()=>{
+ let stopped=0;const h=harness(async()=>({getTracks:()=>[{stop(){stopped++;}}]}));const base=new EventTarget();base.currentTime=40;base.plays=0;base.pauses=0;base.pause=()=>{base.pauses++;};base.play=async()=>{base.plays++;};h.setBase(base);h.nodes['[data-record-base]'].checked=true;h.click('data-record-start');await tick();assert.equal(base.plays,1);assert.equal(base.currentTime,0);base.dispatchEvent(new Event('ended'));await tick();await tick();assert.equal(stopped,1);assert.equal(base.pauses,1);assert.equal(h.input.files[0].type,'audio/wav');assert.equal(h.nodes['[data-record-submit]'].disabled,false);
+});

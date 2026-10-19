@@ -1,0 +1,27 @@
+/* Shared palette: paper studio by day, night stage in dark mode. */
+@font-face { font-family:Manrope; src:url('../assets/fonts/manrope-latin.woff2') format('woff2'); font-style:normal; font-weight:200 800; font-display:swap; }
+@font-face { font-family:'Space Grotesk'; src:url('../assets/fonts/space-grotesk-latin.woff2') format('woff2'); font-style:normal; font-weight:300 700; font-display:swap; }
+:root {
+  color-scheme:light;
+  --font-body:Manrope,system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-display:'Space Grotesk',Manrope,system-ui,sans-serif;
+  --stage:#181626; --stage-raised:#282439; --stage-line:#514963;
+  --stage-text:#faf7ff; --stage-muted:#c9c0d6;
+  --brand:var(--stage); --brand-2:var(--stage-raised);
+  --accent:#d7fa59; --accent-ink:#202811; --music-orange:#e99876;
+  --primary:#5941a5; --accent-text:#5941a5; --music-teal:var(--primary);
+  --bg:#f2f0f5; --card:#ffffff; --text:#242133; --muted:#635e72; --border:#ddd8e6;
+  --surface-soft:#f6f3fa; --focus:#7754d1;
+  --ok:#196442; --danger:#aa2748; --radius:10px;
+  --shadow:0 4px 18px #21153208;
+  --mm-paper:var(--bg); --mm-card:var(--card); --mm-ink:var(--text);
+  --mm-muted:var(--muted); --mm-line:var(--border); --mm-accent:var(--accent);
+  --mm-accent-strong:#4d6410; --mm-player-accent:var(--accent);
+}
+:root[data-theme=dark] {
+  color-scheme:dark;
+  --bg:#111019; --card:#1e1b2a; --text:#f7f3fc; --muted:#bdb4cb; --border:#42394f;
+  --surface-soft:#282333; --primary:#c7b5ff; --accent-text:#c7b5ff;
+  --focus:#d7fa59; --ok:#89d3b0; --danger:#ff9eb3; --mm-accent-strong:var(--accent);
+  --shadow:0 6px 24px #0002;
+}

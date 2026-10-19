@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#190d22"><title>Tu música sin conexión | MusicMad</title>
+<link rel="stylesheet" href="CSS/tokens.css"><link rel="stylesheet" href="CSS/offline.css"><script src="js/offline-library.js" defer></script>
+</head><body class="offline-library">
+<main class="card"><img class="logo" src="img/icon-192.png" alt="MusicMad" width="96" height="96">
+<h1>La música se queda contigo.</h1><p>Pistas que elegiste guardar en este dispositivo. Hasta 8 pistas y 200 MB; puedes quitar alguna para dejar espacio.</p>
+<p data-library-status role="status">Abriendo tu biblioteca…</p><ul data-library-list class="offline-tracks"></ul>
+<section data-library-player hidden><h2 data-library-now></h2><audio controls preload="metadata" data-library-audio aria-label="Reproductor sin conexión"></audio><button type="button" data-library-next>Siguiente pista</button></section>
+<a class="sec" href="feed.php">Volver a la comunidad</a>
+<p class="offline-note">Solo se guardan las pistas que eliges. Cerrar sesión limpia esta biblioteca; no se descargan conversaciones ni perfiles.</p>
+</main></body></html>

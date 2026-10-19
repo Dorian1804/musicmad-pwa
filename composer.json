@@ -1,0 +1,13 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "^7.1",
+        "league/oauth2-google": "^5.0",
+        "james-heinrich/getid3": "^1.9",
+        "minishlink/web-push": "^11.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": false
+        }
+    }
+}

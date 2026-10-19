@@ -1,0 +1,55 @@
+/* Shared navigation: the same catalogue powers the rail, dock and More. */
+:root { --sidebar-width:224px; }
+.app-sidebar { display:none; }
+.nav-section-icon { flex:0 0 24px; position:relative; display:inline-grid; place-items:center; }
+.nav-section-icon svg,.nav-section-action svg,.hub-icon svg { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.nav-section-icon img { width:28px; height:28px; border-radius:50%; object-fit:cover; }
+.nav-section-action { display:flex; align-items:center; gap:12px; min-height:44px; padding:10px 12px; border:0; background:transparent; color:inherit; font:inherit; text-align:left; cursor:pointer; }
+.nav-logout-form { margin:0; }
+.nav-section-action:hover { background:var(--border); }
+.mobile-dock { grid-template-columns:repeat(6,minmax(0,1fr)); }
+.mobile-dock a { border-radius:6px; }
+.mobile-dock a small { font-size:10px; font-weight:600; }
+.mobile-dock a:focus-visible,.app-sidebar a:focus-visible,.nav-section-action:focus-visible { outline:3px solid var(--music-orange,#d7f05a); outline-offset:-3px; }
+.hub-section { margin:24px 0; }
+.hub-section>h2 { font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; margin-bottom:12px; }
+.account-hub-grid>a { position:relative; min-height:100px; padding-left:62px; justify-content:center; border-radius:8px; }
+.hub-icon { position:absolute; left:16px; top:22px; color:var(--music-orange); }
+.hub-section .account-hub-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.account-hub-grid strong,.account-hub-grid small { overflow-wrap:anywhere; }
+.account-hub-grid strong { font-size:.95rem; }
+.account-hub-grid small { line-height:1.4; }
+@media (max-width:480px) {
+ .account-hub-grid>a { padding:48px 12px 14px; min-height:122px; }
+ .hub-icon { left:12px; top:12px; }
+ .account-hub-grid small { font-size:.77rem; }
+}
+@media (min-width:981px) {
+ body.has-app-sidebar { padding-left:var(--sidebar-width); padding-top:var(--header-height); }
+ .has-app-sidebar>.navbar { position:fixed; inset:0 0 auto; width:100%; z-index:1100; }
+ .has-app-sidebar .navbar-inner { max-width:none; padding-inline:24px; }
+ .has-app-sidebar .brand { width:calc(var(--sidebar-width) - 24px); flex-shrink:0; }
+ .has-app-sidebar .nav-links { flex:1; justify-content:flex-end; min-width:0; }
+ .has-app-sidebar .nav-tools { display:flex; gap:8px; }
+ .has-app-sidebar .nav-tools>a { display:flex; gap:8px; align-items:center; min-height:44px; }
+ .nav-account summary>span { max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+ .nav-account-menu>a { display:flex; gap:10px; align-items:center; }
+ .app-sidebar { display:block; position:fixed; left:0; top:var(--header-height); bottom:0; width:var(--sidebar-width); overflow:auto; overscroll-behavior:contain; background:var(--card); color:var(--text); border-right:1px solid var(--border); padding:12px 10px 30px; z-index:900; scrollbar-width:thin; }
+ .sidebar-section { margin:0 0 16px; }
+ .sidebar-section h2 { font-size:.68rem; text-transform:uppercase; letter-spacing:.14em; padding:12px 12px 5px; margin:0; color:var(--muted); }
+ .app-sidebar a { display:flex; align-items:center; gap:12px; min-height:46px; padding:9px 12px; text-decoration:none; color:inherit; border-left:3px solid transparent; border-radius:4px; font-size:.88rem; line-height:1.25; }
+ .app-sidebar a>span:last-child { min-width:0; overflow-wrap:anywhere; }
+ .app-sidebar a:hover { background:var(--border); }
+ .app-sidebar a.active { background:color-mix(in srgb,var(--music-orange) 15%,var(--card)); border-left-color:var(--music-orange); font-weight:750; }
+ .app-sidebar .nav-logout-form { border-top:1px solid var(--border); margin-top:10px; padding-top:8px; }
+ .app-sidebar .nav-section-action { width:100%; font-size:.88rem; }
+ .has-app-sidebar .global-player { left:calc(50% + var(--sidebar-width)/2); width:min(1120px,calc(100% - var(--sidebar-width) - 32px)); }
+ .has-app-sidebar .account-hub-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media (min-width:981px) and (max-width:1279px) {
+ .has-app-sidebar .social-grid { grid-template-columns:minmax(0,1fr); }
+ .has-app-sidebar .social-side { position:static; }
+ .has-app-sidebar .nav-tools>a>span:last-child { display:none; }
+ .has-app-sidebar .account-hub-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+

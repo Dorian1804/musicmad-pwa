@@ -1,0 +1,4 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+function math(){const context={window:{}};vm.runInNewContext(fs.readFileSync('js/waveform-math.js','utf8'),context);return context.window.MusicMadWaveMath;}
+test('onda representa muestras reales de ambos canales y limita amplitudes',()=>{const a=new Float32Array(1024),b=new Float32Array(1024);b[600]=-.75;a[1]=2;const p=math().peaks([a,b]);assert.equal(p.length,512);assert.equal(p[0],1000);assert.equal(p[300],750);assert.equal(p[200],0);});
+test('silencio no genera barras inventadas y canales incompletos se rechazan',()=>{const m=math();assert.ok(m.peaks([new Float32Array(100)]).every(x=>x===0));assert.throws(()=>m.peaks([new Float32Array(4),new Float32Array(3)]));assert.throws(()=>m.peaks([]));});
