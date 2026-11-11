@@ -15,7 +15,7 @@ La disponibilidad real de cada función depende de la configuración y del estad
 
 ## Tecnologías
 
-PHP, JavaScript, CSS y MySQL; dependencias PHP gestionadas con Composer. La versión local de desarrollo también trabaja con React; esta copia pública conserva una instantánea anterior y no incluye todavía ese frontend.
+PHP, JavaScript, CSS y MySQL; dependencias PHP gestionadas con Composer. [frontend/](frontend/README.md) incorpora los controles React de historias de la versión local con compilación independiente y una prueba de integración DOM. La instantánea PHP conserva su integración anterior: el módulo React se publica como fuente documentada, sin activar cambios en producción.
 
 ## Arquitectura
 
